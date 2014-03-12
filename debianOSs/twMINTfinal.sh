@@ -28,6 +28,16 @@ sudo chown $USER:$USER -R $TASKDDATA
 #task and taskd
 git clone https://git.tasktools.org/scm/tm/task.git
 git clone https://git.tasktools.org/scm/tm/taskd.git
+wget https://raw.github.com/jeremiahmarks/taskdsetup/master/debianOSs/taskd.conf
+wget https://raw.github.com/jeremiahmarks/taskdsetup/master/debianOSs/taskd
+
+sudo mv taskd.conf /etc/init/taskd.conf
+sudo chown root:root /etc/init/taskd.conf
+
+sudo mv taskd /etc/init.d/taskd
+sudo chown root:root /etc/init.d/taskd
+sudo chmod 755 /etc/init.d/taskd
+sudo update-rc.d -f taskd defaults
 
 #cmake, make, and make install taskd and task
 cd taskd
@@ -136,23 +146,7 @@ task sync initialize
 
 
 
-echo "I have placed your taskdconfig file in your home directory. Copy it to your device in order to enable sync."
-
-sudo rm /etc/init/taskd.conf
-
-echo "# taskd - Taskwarrior server" | sudo tee -a /etc/init/taskd.conf
-echo "#" | sudo tee -a /etc/init/taskd.conf
-echo "# Allows one to sync their task list" | sudo tee -a /etc/init/taskd.conf
-echo "" | sudo tee -a /etc/init/taskd.conf
-echo "description     \"Taskwarrior Server\"" | sudo tee -a /etc/init/taskd.conf
-echo "" | sudo tee -a /etc/init/taskd.conf
-echo "script" | sudo tee -a /etc/init/taskd.conf
-echo "  export TASKDDATA=/var/taskserver" | sudo tee -a /etc/init/taskd.conf
-echo "  /usr/local/bin/taskd --data $TASKDDATA --daemon" | sudo tee -a /etc/init/taskd.conf
-echo "end script" | sudo tee -a /etc/init/taskd.conf
-echo "" | sudo tee -a /etc/init/taskd.conf
-echo "start on startup" | sudo tee -a /etc/init/taskd.conf
-echo "start on runlevel [2345]" | sudo tee -a /etc/init/taskd.conf
+echo "I have placed your taskdconfig file in your home directory. Copy it to your device in order to enable sync with mirakel."
 
 
 #Note: I was able to sync from another computer to this server
