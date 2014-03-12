@@ -1,0 +1,144 @@
+#! /bin/sh
+### BEGIN INIT INFO
+# Provides:          taskdctl
+# Required-Start:    $remote_fs $syslog
+# Required-Stop:     $remote_fs $syslog
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# X-Interactive:     true
+# Short-Description: Example initscript
+# Description:       This file should be used to construct scripts to be
+#                    placed in /etc/init.d.
+### END INIT INFO
+
+##this file belongs to root, is executable
+##also needs to have sudo update-rc.d -f taskd defaults run
+
+
+
+
+if [ -z $TASKDDATA ] ; then
+  export TASKDDATA=/var/taskserver
+fi
+
+PIDFILE=$(taskd config --data $TASKDDATA | grep pid.file | awk '{print $2}')
+DAEMON="/usr/local/bin/taskd server --data $TASKDDATA --daemon"
+
+ERROR=0
+ARGV="$@"
+if [ "x$ARGV" = "x" ] ; then 
+  ARGS="help"
+fi
+
+for ARG in $@ $ARGS
+do
+  # check for pidfile
+  if [ -f "$PIDFILE" ] ; then
+    PID=`cat $PIDFILE`
+    if [ "x$PID" != "x" ] && kill -0 $PID 2>/dev/null ; then
+      STATUS="daemon (pid $PID) running"
+      RUNNING=1
+    else
+      STATUS="daemon (pid $PID?) not running"
+      RUNNING=0
+    fi
+  else
+    STATUS="daemon (no pid file) not running"
+    RUNNING=0
+  fi
+
+  case $ARG in
+    start)
+      if [ $RUNNING -eq 1 ]; then
+        echo "$0 $ARG: daemon (pid $PID) already running"
+        continue
+      fi
+      if $DAEMON ; then
+        echo "$0 $ARG: daemon started"
+      else
+        echo "$0 $ARG: daemon could not be started"
+        ERROR=3
+      fi
+      ;;
+
+    stop)
+      if [ $RUNNING -eq 0 ]; then
+        echo "$0 $ARG: $STATUS"
+        continue
+      fi
+      if kill $PID ; then
+        rm $PIDFILE
+        echo "$0 $ARG: daemon stopped"
+      else
+        echo "$0 $ARG: daemon could not be stopped"
+        ERROR=4
+      fi
+      ;;
+
+    restart)
+      if [ $RUNNING -eq 0 ]; then
+        echo "$0 $ARG: daemon not running, trying to start"
+        if $DAEMON ; then
+          echo "$0 $ARG: daemon started"
+        else
+          echo "$0 $ARG: daemon could not be started"
+          ERROR=5
+        fi
+      else
+        if $DAEMON ; then
+          if kill -HUP $PID ; then
+            rm $PIDFILE
+            echo "$0 $ARG: daemon restarted"
+          else
+            echo "$0 $ARG: daemon could not be restarted"
+            ERROR=6
+          fi
+        else
+          echo "$0 $ARG: configuration broken, ignoring restart"
+          ERROR=6
+        fi
+      fi
+      ;;
+
+    graceful)
+      if [ $RUNNING -eq 0 ]; then
+        echo "$0 $ARG: daemon not running, trying to start"
+        if $DAEMON ; then
+          echo "$0 $ARG: daemon started"
+        else
+          echo "$0 $ARG: daemon could not be started"
+          ERROR=5
+        fi
+      else
+        if $DAEMON ; then
+          if kill -USR1 $PID ; then
+            echo "$0 $ARG: daemon gracefully restarted"
+          else
+            echo "$0 $ARG: daemon could not be restarted"
+            ERROR=7
+          fi
+        else
+          echo "$0 $ARG: configuration broken, ignoring restart"
+          ERROR=7
+        fi
+      fi
+      ;;
+
+    *)
+      echo "usage: $0 (start|stop|restart|graceful|help)"
+      cat <<EOF
+
+start         - start daemon
+stop          - stop daemon
+restart       - restart daemon if running by sending a SIGHUP or start if not running
+graceful      - do a graceful restart by sending a SIGUSR1 or start if not running
+help          - this screen
+
+EOF
+      ERROR=2
+      ;;
+
+  esac
+done
+
+exit $ERROR
