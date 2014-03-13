@@ -1,26 +1,17 @@
 #!/usr/bin/env bash
 
-#On ubuntu 12.04 this script will ensure that all dependencies are met to
-#install and build task and taskd, it will then install them, set up a taskd 
-#server that task can sync with, and generate a taskdconfig file that can
-#be imported into mirakel to allow syncing from mirakel to the server
-
 #NOTE: it is likely that the user will need to change the .tasdconfig information
-#	to include the address of the server as the default settings are simply "localserver"
+	#to include the address of the server as the default settings are simply "localserver"
 
-#TODO: figure out the whole .bash_profile, .profile, .bashrc thing in order to get it set up 
-#	so that $TASKDDATA is a permanant environment variable and taskdctl start is run
-#	either at login or poweron
-
-#I think that these are the prereqs, will test later
-#sudo apt-get update
+#installing the prereqs:
 sudo apt-get install build-essential cmake libqt4-dev python-setuptools qt4-qmake uuid-dev qt4-dev-tools git gnutls-bin libgnutls-dev
 
 
-#I choose to keep everything in one local hidden folder. Since .task is used anyway
-#I choose to keep all of taskwarrior and taskserver information in that folder
+#taskwarrior uses ~/.task as its root folder by default, so I am choosing it use it as a place to build everything
+
 mkdir -p $HOME/.task
 cd $HOME/.task
+#placing the taskserver data in /var/taskserver seems like an appropriate choice since apache keeps its data
 export TASKDDATA=/var/taskserver
 sudo mkdir -p $TASKDDATA
 sudo chown $USER:$USER -R $TASKDDATA
@@ -28,6 +19,8 @@ sudo chown $USER:$USER -R $TASKDDATA
 #task and taskd
 git clone https://git.tasktools.org/scm/tm/task.git
 git clone https://git.tasktools.org/scm/tm/taskd.git
+mkdir temp-files
+cd temp-files
 wget https://raw.github.com/jeremiahmarks/taskdsetup/master/debianOSs/taskd.conf
 wget https://raw.github.com/jeremiahmarks/taskdsetup/master/debianOSs/taskd
 
@@ -38,8 +31,10 @@ sudo mv taskd /etc/init.d/taskd
 sudo chown root:root /etc/init.d/taskd
 sudo chmod 755 /etc/init.d/taskd
 sudo update-rc.d -f taskd defaults
-
+cd ..
+rmdir temp-files
 #cmake, make, and make install taskd and task
+
 cd taskd
 cmake .
 make
