@@ -17,7 +17,18 @@
 		####	7. 	Create a backup of files needed to set up other taskwarrior
 		####			installs to work with the taskserver
 		####	8. cleanup after itself
-
+####
+####
+#### Additional Notes:	
+	####	Don't forget to update the "server" line of your
+	#### 		taskdconfig file to point back at the actual server rather than just
+	#### 		"localhost". More than likely this will be either an IP address or a 
+	#### 		hostname.
+	####
+	####	Don't hesitate to contact me if it doesn't work. If you can't get it to work
+	####		chances are I cannot either, but who knows.
+###############################################################################
+###############################################################################
 
 # The MIT License (MIT)
 
