@@ -89,6 +89,8 @@ else
 		./configure 
 		gmake 
 		sudo gmake install
+		cd $HOME
+		rm -Rf $HOME/cmaketemp
 	fi
 fi
 
@@ -131,12 +133,12 @@ rmdir temp-files
 #cmake, make, and make install taskd and task
 
 cd $HOME/.task/taskd
-$CM .
+cmake .
 make
 sudo make install
 
 cd $HOME/.task/task
-$CM .
+cmake .
 make
 sudo make install
 
