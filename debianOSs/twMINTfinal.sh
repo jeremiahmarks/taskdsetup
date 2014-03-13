@@ -2,8 +2,21 @@
 ###############################################################################
 ###############################################################################
 ####
-#### Author		Jeremiah Marks
-####
+#### Author				Jeremiah Marks
+#### Authors Contact:	Jeremiah@jlmarks.org
+#### Authors website: 	jlmarks.org
+#### 
+#### Purpose:			This script is designed:
+		####	1.	Meet the requirements install taskwarrior and task server
+		####	2.	Install taskwarrior and taskserver 
+		####	3.	Set up taskserver in such a way that it starts at startup
+		####			of the computer system
+		####	4.	Set up the server and local client to work together
+		####	5.	Set up the server to work with Mirakel
+		####	6.	Generate a .taskdconfig file to import into Mirakel
+		####	7. 	Create a backup of files needed to set up other taskwarrior
+		####			installs to work with the taskserver
+		####	8. cleanup after itself
 
 
 # The MIT License (MIT)
@@ -39,16 +52,23 @@ sudo apt-get install build-essential cmake libqt4-dev qt4-qmake uuid-dev qt4-dev
 
 mkdir -p $HOME/.task
 cd $HOME/.task
+
 #placing the taskserver data in /var/taskserver seems like an appropriate choice since apache keeps its data
 export TASKDDATA=/var/taskserver
 sudo mkdir -p $TASKDDATA
 sudo chown $USER:$USER -R $TASKDDATA
+
 #These may change, but for now they are the correct download links for both
 #task and taskd
 git clone https://git.tasktools.org/scm/tm/task.git
 git clone https://git.tasktools.org/scm/tm/taskd.git
+
+#since I ran into issues with downloading a file name taskd into a folder where there is a folder named
+#taskd I am using a tempfiles folder
 mkdir temp-files
 cd temp-files
+#taskd.conf and taskd are both needed to make the server automatically start on boot up. 
+
 wget https://raw.github.com/jeremiahmarks/taskdsetup/master/debianOSs/taskd.conf
 wget https://raw.github.com/jeremiahmarks/taskdsetup/master/debianOSs/taskd
 
@@ -61,6 +81,8 @@ sudo chmod 755 /etc/init.d/taskd
 sudo update-rc.d -f taskd defaults
 cd ..
 rmdir temp-files
+
+
 #cmake, make, and make install taskd and task
 
 cd taskd
@@ -174,7 +196,10 @@ task config taskd.ca ~/.task/ca.cert.pem
 
 taskdctl start
 
-tar cvf ~/$USERclientSettings.tar ~/totar/
+cp ~/.taskrc ~/totar
+
+cd
+tar cf ~/taskwarriorclientSettings.tar totar/
 
 rm -Rf ~/totar
 rm -Rf ~/.task/task
