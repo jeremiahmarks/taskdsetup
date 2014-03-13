@@ -27,7 +27,7 @@ wget https://raw.github.com/jeremiahmarks/taskdsetup/master/arch/taskd.service
 
 sudo chown root:root taskd.service
 sudo mv taskd.service /etc/systemd/system/taskd.service
-
+sudo useradd taskd
 ################################################################################
 ################################################################################
 ####
