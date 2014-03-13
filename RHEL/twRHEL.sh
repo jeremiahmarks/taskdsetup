@@ -129,17 +129,18 @@ cd ..
 rmdir temp-files
 
 #cmake, make, and make install taskd and task
-cd taskd
+
+cd $HOME/.task/taskd
 $CM .
 make
 sudo make install
 
-cd ../task
+cd $HOME/.task/task
 $CM .
 make
 sudo make install
 
-cd ../taskd
+cd $HOME/.task/taskd
 taskd init
 
 cd pki
