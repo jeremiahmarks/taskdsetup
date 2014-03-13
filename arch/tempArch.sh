@@ -25,6 +25,8 @@ cd temp-files
 
 wget https://raw.github.com/jeremiahmarks/taskdsetup/master/arch/taskd.service
 
+# sudo useradd taskd
+
 sudo chown root:root taskd.service
 sudo mv taskd.service /etc/systemd/system/taskd.service
 

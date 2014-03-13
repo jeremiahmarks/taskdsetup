@@ -5,8 +5,8 @@ sudo pacman -S git
 sudo pacman -S cmake
 
 
-# mkdir -p $HOME/.task
-# cd $HOME/.task
+mkdir -p $HOME/.task
+cd $HOME/.task
 
 #placing the taskserver data in /var/taskserver seems like an appropriate choice since apache keeps its data
 export TASKDDATA=/var/taskserver
@@ -18,8 +18,8 @@ sudo chown $USER:$USER -R $TASKDDATA
 git clone https://git.tasktools.org/scm/tm/task.git
 git clone https://git.tasktools.org/scm/tm/taskd.git
 
-# #since I ran into issues with downloading a file name taskd into a folder where there is a folder named
-# #taskd I am using a tempfiles folder
+#since I ran into issues with downloading a file name taskd into a folder where there is a folder named
+#taskd I am using a tempfiles folder
 mkdir temp-files
 cd temp-files
 
@@ -27,7 +27,7 @@ wget https://raw.github.com/jeremiahmarks/taskdsetup/master/arch/taskd.service
 
 sudo chown root:root taskd.service
 sudo mv taskd.service /etc/systemd/system/taskd.service
-sudo useradd taskd
+
 ################################################################################
 ################################################################################
 ####
@@ -44,7 +44,7 @@ sudo systemctl enable taskd
 
 
 cd ..
-rmdir temp-files
+rmdir temp-filessudo
 
 
 # #cmake, make, and make install taskd and task

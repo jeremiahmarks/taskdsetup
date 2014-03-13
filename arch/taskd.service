@@ -7,8 +7,8 @@ Documentation=http://taskwarrior.org/docs/
 ExecStart=/usr/local/bin/taskd server --data /var/taskserver
 Restart=on-abort
 Type=simple
-User=taskd
-Group=taskd
+
+
 
 [Install]
 WantedBy=multi-user.target
