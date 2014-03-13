@@ -1,9 +1,10 @@
 #!/usr/bin/env bash
 
-sudo pacman -S wget
-sudo pacman -S git
-sudo pacman -S cmake
 
+sudo pacman -S --needed wget
+sudo pacman -S --needed git
+sudo pacman -S --needed cmake
+sudo pacman -S --needed gnutls
 
 mkdir -p $HOME/.task
 cd $HOME/.task
@@ -44,7 +45,7 @@ sudo systemctl enable taskd
 
 
 cd ..
-rmdir temp-filessudo
+rmdir temp-files
 
 
 # #cmake, make, and make install taskd and task
