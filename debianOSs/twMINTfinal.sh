@@ -6,7 +6,7 @@
 #### Authors Contact:	Jeremiah@jlmarks.org
 #### Authors website: 	jlmarks.org
 #### 
-#### Purpose:			This script is designed:
+#### Purpose:			This script is desig
 		####	1.	Meet the requirements install taskwarrior and task server
 		####	2.	Install taskwarrior and taskserver 
 		####	3.	Set up taskserver in such a way that it starts at startup

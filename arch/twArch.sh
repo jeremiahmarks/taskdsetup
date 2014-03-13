@@ -5,8 +5,8 @@ sudo pacman -S git
 sudo pacman -S cmake
 
 
-mkdir -p $HOME/.task
-cd $HOME/.task
+# mkdir -p $HOME/.task
+# cd $HOME/.task
 
 #placing the taskserver data in /var/taskserver seems like an appropriate choice since apache keeps its data
 export TASKDDATA=/var/taskserver
@@ -18,29 +18,36 @@ sudo chown $USER:$USER -R $TASKDDATA
 git clone https://git.tasktools.org/scm/tm/task.git
 git clone https://git.tasktools.org/scm/tm/taskd.git
 
-#since I ran into issues with downloading a file name taskd into a folder where there is a folder named
-#taskd I am using a tempfiles folder
+# #since I ran into issues with downloading a file name taskd into a folder where there is a folder named
+# #taskd I am using a tempfiles folder
 mkdir temp-files
 cd temp-files
-#taskd.conf and taskd are both needed to make the server automatically start on boot up. 
+
+wget https://raw.github.com/jeremiahmarks/taskdsetup/master/arch/taskd.service
+
+sudo chown root:root taskd.service
+sudo mv taskd.service /etc/systemd/system/taskd.service
+
+################################################################################
+################################################################################
 ####
-## It appears that arch uses the new systemd setup, I doubt that these files will be useful
+#### from https://wiki.archlinux.org/index.php/Systemd
 
-## wget https://raw.github.com/jeremiahmarks/taskdsetup/master/debianOSs/taskd.conf
-## wget https://raw.github.com/jeremiahmarks/taskdsetup/master/debianOSs/taskd
-#
-## sudo mv taskd.conf /etc/init/taskd.conf
-## sudo chown root:root /etc/init/taskd.conf
-#
-## sudo mv taskd /etc/init.d/taskd
-## sudo chown root:root /etc/init.d/taskd
-## sudo chmod 755 /etc/init.d/taskd
-## sudo update-rc.d -f taskd defaults
-## cd ..
-## rmdir temp-files
+####Enable a unit to be started on bootup:
+####
+#### systemctl enable unit
+sudo systemctl enable taskd
+
+#### Reload systemd, scanning for new or changed units:
+
+#### systemctl daemon-reload
 
 
-#cmake, make, and make install taskd and task
+cd ..
+rmdir temp-files
+
+
+# #cmake, make, and make install taskd and task
 
 cd taskd
 cmake .
