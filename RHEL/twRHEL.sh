@@ -59,12 +59,12 @@
 
 
 sudo yum update
-sudo yum groupinstall "Development Tools"
-sudo yum install gnutls-devel* 
-sudo yum install libuuid-devel* 
-sudo yum install gnutls-utils* 
-sudo yum install wget 
-sudo yum install cmake
+sudo yum groupinstall -y "Development Tools"
+sudo yum install -y gnutls-devel* 
+sudo yum install -y libuuid-devel* 
+sudo yum install -y gnutls-utils* 
+sudo yum install -y wget 
+sudo yum install -y cmake
 
 ####
 #### Make sure to get this portion back from testa.sh where it is being refined. 
