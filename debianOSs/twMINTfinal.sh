@@ -122,10 +122,20 @@ mv $USER.taskdconfig ~/$USER.taskdconfig
 
 
 #####################################
-cp $HOME/.task/taskd/pki/$ORG$USER.cert.pem ~/.task
-cp $HOME/.task/taskd/pki/$ORG$USER.key.pem ~/.task
-cp $HOME/.task/taskd/pki/ca.cert.pem ~/.task
+mkdir ~/totar
+touch ~/totar/credentials.txt
+echo "$ORG/$USER/$USERKEY">>~/totar/credentials.txt
+touch ~/totar/server.txt
+echo "$SERVER">>~/totar/server.txt
 
+cp $HOME/.task/taskd/pki/$ORG$USER.cert.pem ~/.task
+cp $HOME/.task/taskd/pki/$ORG$USER.cert.pem ~/totar
+cp $HOME/.task/taskd/pki/$ORG$USER.key.pem ~/.task
+cp $HOME/.task/taskd/pki/$ORG$USER.key.pem ~/totar
+cp $HOME/.task/taskd/pki/ca.cert.pem ~/.task
+cp $HOME/.task/taskd/pki/ca.cert.pem ~/totar
+
+cp ~/$USER.taskdconfig ~/totar/$USER.taskdconfig
 
 
 task config taskd.certificate ~/.task/$ORG$USER.cert.pem
@@ -136,21 +146,16 @@ task config taskd.ca ~/.task/ca.cert.pem
 
 taskdctl start
 
+tar cvf ~/$USERclientSettings.tar ~/totar/
+
+rm -Rf ~/totar
+rm -Rf ~/.task/task
+rm -Rf ~/.task/taskd
+
 task sync initialize
 
 
 
 
 echo "I have placed your taskdconfig file in your home directory. Copy it to your device in order to enable sync with mirakel."
-
-
-#Note: I was able to sync from another computer to this server
-#		after reboot, prior to logging in, though I was unable to 
-#		ssh'd in and was able to sync again.
-#		logged out of ssh and I was able to successfully sync
-#		I added "export TASKDDATA=/home/jlmarks/.task/server_data" 
-#		to the end of ~/bashrc and "taskdctl start" to the end of ~/.profile
-
-#I should experiment with setting the TASKDDATA to /etc/task_server (or a root folder, anyway)
-#and appending the export and taskctl start to /etc/profile
-
+echo "I have also placed a copy of all of your needed certifications an archive $USERclientSettings.tar . "
