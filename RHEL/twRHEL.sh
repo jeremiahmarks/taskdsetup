@@ -121,6 +121,10 @@ sudo mv taskd /etc/init.d/taskd
 sudo chown root:root /etc/init.d/taskd
 sudo chmod 755 /etc/init.d/taskd
 sudo update-rc.d -f taskd defaults
+sudo chkconfig --add taskd
+sudo chkconfig --level 2345 taskd on
+
+
 cd ..
 rmdir temp-files
 
