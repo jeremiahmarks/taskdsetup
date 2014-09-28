@@ -147,7 +147,7 @@ ROOT_CA=$HOME/.task/taskd/pki/ca.cert.pem
 read -p "Username?`echo $'\n> '`" USER
 read -p "Org?`echo $'\n> '`" ORG
 #create org if nessersary
-taskd add --data $TASKDDATA org $ORG >&2>/dev/null
+taskd add --data $TASKDDATA org $ORG 2>/dev/null
 #create user
 taskd add --data $TASKDDATA user --quiet $ORG $USER 1> user.key
 #find configs
